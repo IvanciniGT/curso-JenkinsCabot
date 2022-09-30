@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+
+    temis:
+        container_name: mitemis
+        build:          .
+        image:          "temis:dev"
+        ports:
+                      - 8082:8080 

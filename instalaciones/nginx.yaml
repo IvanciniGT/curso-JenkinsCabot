@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+    minginx:
+        container_name:     minginxNuevo
+        image:              nginx:latest        # Ojo nunca usar la imagen latest
+        environment:
+                          - BBDD=bd.sqlserver.prod.cabot.es
+        volumes:
+                          - /home/ubuntu/environment/datos/prueba:/datos 
+        ports:
+                          - 81:80
+
+# docker-compose -f curso/instalaciones/nginx.yaml up -d    [Crea, recrea] y arranca
+# docker-compose -f curso/instalaciones/nginx.yaml down     [Para] y borra
+# docker-compose -f curso/instalaciones/nginx.yaml start    arranca       
+# docker-compose -f curso/instalaciones/nginx.yaml stop     detiene

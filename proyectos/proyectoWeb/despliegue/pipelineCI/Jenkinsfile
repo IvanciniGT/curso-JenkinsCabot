@@ -1,0 +1,41 @@
+pipeline{
+    
+    agent {
+        docker {
+            image "docker:latest"
+        }
+    }    
+    
+    triggers {
+      upstream (upstreamProjects: 'TEMIS_Compile_UnitTest_ContainerImage')
+    }
+
+    stages {
+        stage('Arranco temis. Entorno Q&A'){
+            steps {
+                sh 'docker run --rm -it -d temis:rc > container.id'
+                //Hacer cosas con la BBDD
+            }
+        }
+        stage('Ejecutar pruebas de rendimiento'){
+            steps {
+                sh 'docker build -f despliegue/pipelineCI/jmeter/Dockerfile . -t jmeter:latest'
+                sh 'docker run --rm --link $(cat container.id):temis -v /home/ubuntu/environment/datos/jenkins/workspace/TEMIS_CI/despliegue/pipelineCI/jmeter:/report jmeter:latest'
+            }
+            post{
+                always {
+                    archiveArtifacts artifacts: 'despliegue/pipelineCI/jmeter/report.xml', followSymlinks: false                
+                    perfReport filterRegex: '', relativeFailedThresholdNegative: 1.2, relativeFailedThresholdPositive: 1.89, relativeUnstableThresholdNegative: 1.8, relativeUnstableThresholdPositive: 1.5, sourceDataFiles: 'despliegue/pipelineCI/jmeter/report.xml'
+                }
+            }
+        }
+    }
+    post {
+        always {
+            sh 'docker stop $(cat container.id)'
+            sh 'rm container.id'
+        }
+    }
+    
+}
+

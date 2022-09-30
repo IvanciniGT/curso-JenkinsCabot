@@ -1,0 +1,17 @@
+2022/09/30 09:42:12 INFO  - jmeter.util.JMeterUtils: Setting Locale to en 
+2022/09/30 09:42:13 INFO  - jmeter.JMeter: Loading user properties from: /usr/share/jmeter/bin/user.properties 
+2022/09/30 09:42:13 INFO  - jmeter.JMeter: Loading system properties from: /usr/share/jmeter/bin/system.properties 
+2022/09/30 09:42:13 INFO  - jmeter.JMeter: Copyright (c) 1998-2015 The Apache Software Foundation 
+2022/09/30 09:42:13 INFO  - jmeter.JMeter: Version 2.13.20170723 
+2022/09/30 09:42:13 INFO  - jmeter.JMeter: java.version=11.0.16 
+2022/09/30 09:42:13 INFO  - jmeter.JMeter: java.vm.name=OpenJDK 64-Bit Server VM 
+2022/09/30 09:42:13 INFO  - jmeter.JMeter: os.name=Linux 
+2022/09/30 09:42:13 INFO  - jmeter.JMeter: os.arch=amd64 
+2022/09/30 09:42:13 INFO  - jmeter.JMeter: os.version=5.4.0-1085-aws 
+2022/09/30 09:42:13 INFO  - jmeter.JMeter: file.encoding=UTF-8 
+2022/09/30 09:42:13 INFO  - jmeter.JMeter: Default Locale=English 
+2022/09/30 09:42:13 INFO  - jmeter.JMeter: JMeter  Locale=English 
+2022/09/30 09:42:13 INFO  - jmeter.JMeter: JMeterHome=/usr/share/jmeter 
+2022/09/30 09:42:13 INFO  - jmeter.JMeter: user.dir  =/home/ubuntu/environment/curso/proyectos/proyectoWeb/despliegue/pipelineCI/jmeter 
+2022/09/30 09:42:13 INFO  - jmeter.JMeter: PWD       =/home/ubuntu/environment/curso/proyectos/proyectoWeb/despliegue/pipelineCI/jmeter 
+2022/09/30 09:42:13 INFO  - jmeter.JMeter: IP: 172.31.2.202 Name: ip-172-31-2-202 FullName: ip-172-31-2-202.eu-west-1.compute.internal 

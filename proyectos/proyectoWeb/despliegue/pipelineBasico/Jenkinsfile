@@ -1,0 +1,100 @@
+pipeline {
+
+    agent {
+        docker {
+            image "maven:3.8.6-openjdk-18"
+            args '-v $HOME/.m2:/root/.m2'
+        }
+    }    
+    
+    stages {
+        
+        stage('Compilación') {
+            steps {
+                echo 'Compilo: Lanzo el mvn compile' //Tarea 
+                sh 'mvn compile'
+            }
+        }
+        stage('Pruebas') {
+            
+            stages {                
+                stage('Pruebas unitarias') {
+                    steps {
+                        echo 'Lanzo el mvn test UNIT TESTING'
+                        sh 'mvn test'
+                    }
+                    post {
+                        always {
+                            echo 'Publico el informe de pruebas'
+                            junit allowEmptyResults: true, testResults: 'target/surefire-reports/*.xml'
+                        }
+                    }
+                }
+                
+                stage('Pruebas estáticas') {
+                    steps {
+                        echo 'Lanzo el sonar'
+                        withSonarQubeEnv('MiSonarqube'){
+                            sh '''
+                                mvn sonar:sonar
+                            '''
+                        }
+                        /*
+                            withCredentials([string(credentialsId: 'sonarToken', variable: 'CREDENCIAL_SONAR')]) {
+                                sh '''
+                                    mvn sonar:sonar \
+                                        -Dsonar.host.url=http://172.31.2.202:8081 \
+                                        -Dsonar.login=$CREDENCIAL_SONAR
+                                '''
+                            }
+                        }*/
+                    }
+                    post {
+                        success{
+                            echo 'Esperar el resultado de Sonar'
+                            timeout( time: 1, unit: 'HOURS'){
+                                waitForQualityGate abortPipeline: true
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        stage('Empaquetado') {
+            steps {
+                echo 'Lanzo el mvn package'
+                sh 'mvn package -DskipTests'
+                sh 'docker build -f despliegue/pipelineBasico/Dockerfile . -t temis:rc' //release candidate
+            }
+            post {
+                success {
+                    echo 'Guardo el artefacto'
+                    archiveArtifacts artifacts: 'target/*.war', followSymlinks: false                
+                }
+            }
+        }
+//        stage('Generar imagen') {
+//            steps {
+//            }
+//            post {
+//                success {
+//                    echo 'Guardo la imagen'
+                    //sh 'docker push temis:latest'
+//                }
+//            }
+//            agent {
+//                docker {
+//                    image "docker:latest"
+//                }
+//            }
+//        }
+        
+    }
+    post {
+        always {
+            echo 'Borrado del workspace'
+            cleanWs deleteDirs: true, patterns: [[pattern: 'target/', type: 'INCLUDE']]
+        }
+    }
+   
+}
